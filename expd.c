@@ -6,14 +6,14 @@
 /*   By: yiken <yiken@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/02 17:58:51 by yiken             #+#    #+#             */
-/*   Updated: 2024/06/04 16:47:40 by yiken            ###   ########.fr       */
+/*   Updated: 2024/06/04 17:20:52 by yiken            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <libc.h>
 #include <readline/readline.h>
 #define NUM_AFTER 1
-#define KEYCHR_AFTER 1
+#define KEYCHR_AFTER 2
 
 int		is_keychr(char c);
 int		is_expandable(char *str, int index, int inside_sq);
