@@ -6,13 +6,12 @@
 /*   By: yiken <yiken@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/02 18:20:45 by yiken             #+#    #+#             */
-/*   Updated: 2024/06/04 11:43:10 by yiken            ###   ########.fr       */
+/*   Updated: 2024/06/06 16:07:30 by yiken            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "libc.h"
-#define NUM_AFTER 1
-#define KEYCHR_AFTER 2
+#include <unistd.h>
+#include <stdlib.h>
 
 int	ft_strncmp(char *s1, char *s2, size_t n)
 {
@@ -41,17 +40,9 @@ int	is_keychr(char c)
 		|| (c >= '0' && c <= '9'));
 }
 
-int	is_expandable(char *str, int index, int inside_sq) // //$USER
+int	is_num(char c)
 {
-	if (str[index] != '$' || inside_sq 
-		|| (index > 1 && str[index - 2] != '\\') 
-		|| (index > 0 && str[index - 1] == '\\'))
-		return (0);
-	if (str[index + 1] >= '0' && str[index + 1] <= '9')
-		return (NUM_AFTER);
-	if (is_keychr(str[index + 1]))
-		return (KEYCHR_AFTER);
-	return (0);
+	return (c >= '0' && c <= '9');
 }
 
 char	*trim_key(char *str)
