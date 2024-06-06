@@ -1,16 +1,33 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   minishell.c                                        :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: yiken <yiken@student.42.fr>                +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/06/06 17:16:09 by yiken             #+#    #+#             */
+/*   Updated: 2024/06/06 17:16:36 by yiken            ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include <readline/readline.h>
 #include <libc.h>
 
-char	*expd_str(char **envp, char *str);
+char	*expd_line(char **envp, char *str);
 
-int main(int ac, char **av, char **envp)
+int	main(int ac, char **av, char **envp)
 {
-	char	*str;
+	char	*line;
+	char	*expded_line;
+
+	(void)ac;
+	(void)av;
 	while (1)
 	{
-		str = readline("minishell$ ");
-		if (!str)
+		line = readline("minishell$ ");
+		if (!line)
 			return (perror("readline"), 1);
-		printf("%s\n", expd_str(envp, str));
+		expded_line = expd_line(envp, line);
+		printf("%s\n", expded_line);
 	}
 }
