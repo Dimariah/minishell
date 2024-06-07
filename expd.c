@@ -6,7 +6,7 @@
 /*   By: yiken <yiken@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/02 17:58:51 by yiken             #+#    #+#             */
-/*   Updated: 2024/06/06 17:15:43 by yiken            ###   ########.fr       */
+/*   Updated: 2024/06/07 21:02:28 by yiken            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,29 +19,42 @@ int		ft_strncmp(char *s1, char *s2, size_t n);
 int		ft_strlen(char *str);
 char	*trim_key(char *str);
 int		is_num(char c);
+void	expand_error(void);
 
-int	var_len(char **envp, char *str)
+char	*find_var(char **envp, char *key, int key_len)
 {
-	int		i;
-	char	*key;
-	int		key_len;
+	int	i;
 
-	key = trim_key(str);
-	key_len = 0;
-	while (str[key_len] && is_keychr(str[key_len]))
-		key_len++;
 	i = 0;
 	while (envp[i])
 	{
-		if (!ft_strncmp(envp[i], key, key_len + 1))
+		if (!ft_strncmp(envp[i], key, key_len))
 		{
 			free(key);
-			return (ft_strlen(envp[i] + (key_len + 1)));
+			return (envp[i]);
 		}
 		i++;
 	}
 	free(key);
-	return (0);
+	return (NULL);
+}
+
+int	var_len(char **envp, char *str)
+{
+	char	*key;
+	int		key_len;
+	char	*var;
+
+	key = trim_key(str);
+	if (!key)
+		expand_error();
+	key_len = 0;
+	while (str[key_len] && is_keychr(str[key_len]))
+		key_len++;
+	var = find_var(envp, key, key_len + 1);
+	if (!var)
+		return (0);
+	return (ft_strlen(var + (key_len + 1)));
 }
 
 int	is_expandable(char c)
@@ -96,26 +109,23 @@ int	cat_key_val(char **envp, char *str, char *new_str, int j)
 	char	*key;
 	int		key_len;
 	int		i;
-	int		k;
+	char	*var;
 
 	key = trim_key(str);
+	if (!key)
+	{
+		free(new_str);
+		expand_error();
+	}
 	key_len = 0;
 	while (str[key_len] && is_keychr(str[key_len]))
 		key_len++;
-	i = 0;
-	while (envp[i])
-	{
-		if (!ft_strncmp(envp[i], key, key_len + 1))
-		{
-			free(key);
-			k = key_len + 1;
-			while (envp[i][k])
-				new_str[j++] = envp[i][k++];
-			return (j);
-		}
-		i++;
-	}
-	free(key);
+	var = find_var(envp, key, key_len);
+	if (!var)
+		return (j);
+	i = key_len + 1;
+	while (var[i])
+		new_str[j++] = var[i++];
 	return (j);
 }
 
@@ -127,6 +137,8 @@ char	*expd_line(char **envp, char *str)
 	int		status;
 
 	new_str = malloc(str_newsize(envp, str) + 1);
+	if (!new_str)
+		return (0);
 	i = 0;
 	j = 0;
 	while (str[i])

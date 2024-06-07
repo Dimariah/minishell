@@ -6,7 +6,7 @@
 /*   By: yiken <yiken@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/02 18:20:45 by yiken             #+#    #+#             */
-/*   Updated: 2024/06/06 16:07:30 by yiken            ###   ########.fr       */
+/*   Updated: 2024/06/07 20:41:57 by yiken            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,6 +45,12 @@ int	is_num(char c)
 	return (c >= '0' && c <= '9');
 }
 
+void	expand_error(void)
+{
+	write(2, "error while expanding\n", 22);
+	exit(1);
+}
+
 char	*trim_key(char *str)
 {
 	char	*key;
@@ -56,10 +62,7 @@ char	*trim_key(char *str)
 		key_len++;
 	key = malloc(key_len + 2);
 	if (!key)
-	{
-		write(2, "error while expanding\n", 22);
-		exit(1);
-	}
+		return (NULL);
 	i = 0;
 	while (str[i] && is_keychr(str[i]))
 	{
