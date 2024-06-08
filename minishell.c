@@ -6,7 +6,7 @@
 /*   By: yiken <yiken@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/06 17:16:09 by yiken             #+#    #+#             */
-/*   Updated: 2024/06/06 17:16:36 by yiken            ###   ########.fr       */
+/*   Updated: 2024/06/08 16:15:53 by yiken            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,5 +29,6 @@ int	main(int ac, char **av, char **envp)
 			return (perror("readline"), 1);
 		expded_line = expd_line(envp, line);
 		printf("%s\n", expded_line);
+		free(expded_line);
 	}
 }

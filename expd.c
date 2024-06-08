@@ -6,7 +6,7 @@
 /*   By: yiken <yiken@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/02 17:58:51 by yiken             #+#    #+#             */
-/*   Updated: 2024/06/06 17:15:43 by yiken            ###   ########.fr       */
+/*   Updated: 2024/06/08 16:14:52 by yiken            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,74 +14,51 @@
 #include <stdlib.h>
 #include <readline/readline.h>
 
-int		is_keychr(char c);
-int		ft_strncmp(char *s1, char *s2, size_t n);
+int		is_alnum(char c);
 int		ft_strlen(char *str);
-char	*trim_key(char *str);
 int		is_num(char c);
+char	*trim_key(char *str);
+int		is_expandable(char *str, int *inside_sq);
+char	*find_var(char **envp, char *key, int key_len);
+void	expand_error(void);
 
 int	var_len(char **envp, char *str)
 {
-	int		i;
 	char	*key;
 	int		key_len;
+	char	*var;
 
 	key = trim_key(str);
+	if (!key)
+		expand_error();
 	key_len = 0;
-	while (str[key_len] && is_keychr(str[key_len]))
+	while (str[key_len] && is_alnum(str[key_len]))
 		key_len++;
-	i = 0;
-	while (envp[i])
-	{
-		if (!ft_strncmp(envp[i], key, key_len + 1))
-		{
-			free(key);
-			return (ft_strlen(envp[i] + (key_len + 1)));
-		}
-		i++;
-	}
-	free(key);
-	return (0);
-}
-
-int	is_expandable(char c)
-{
-	static int	inside_dq;
-	static int	inside_sq;
-	static int	inside_bs;
-	int			status;
-
-	if (c == '\\')
-		inside_bs = !inside_bs;
-	if (c == '\'' && !inside_bs && !inside_dq)
-		inside_sq = !inside_sq;
-	if (c == '\"' && !inside_bs && !inside_sq)
-		inside_dq = !inside_dq;
-	status = (c == '$' && !inside_sq && !inside_bs);
-	if (c != '\\')
-		inside_bs = 0;
-	return (status);
+	var = find_var(envp, key, key_len + 1);
+	if (!var)
+		return (0);
+	return (ft_strlen(var + (key_len + 1)));
 }
 
 int	str_newsize(char **envp, char *str)
 {
-	int		i;
-	int		cntr;
-	int		inside_sq;
-	int		status;
+	int	i;
+	int	cntr;
+	int	inside_sq;
+	int	status;
 
 	i = 0;
 	cntr = 0;
 	inside_sq = 0;
 	while (str[i])
 	{
-		status = is_expandable(str[i]);
+		status = is_expandable(str + i, &inside_sq);
 		if (status && is_num(str[i + 1]))
 			i++;
-		else if (status && is_keychr(str[i + 1]))
+		else if (status && is_alnum(str[i + 1]))
 		{
 			cntr += var_len(envp, str + ++i);
-			while (str[i + 1] && is_keychr(str[i + 1]))
+			while (str[i + 1] && is_alnum(str[i + 1]))
 				i++;
 		}
 		else
@@ -96,48 +73,45 @@ int	cat_key_val(char **envp, char *str, char *new_str, int j)
 	char	*key;
 	int		key_len;
 	int		i;
-	int		k;
+	char	*var;
 
 	key = trim_key(str);
-	key_len = 0;
-	while (str[key_len] && is_keychr(str[key_len]))
-		key_len++;
-	i = 0;
-	while (envp[i])
+	if (!key)
 	{
-		if (!ft_strncmp(envp[i], key, key_len + 1))
-		{
-			free(key);
-			k = key_len + 1;
-			while (envp[i][k])
-				new_str[j++] = envp[i][k++];
-			return (j);
-		}
-		i++;
+		free(new_str);
+		expand_error();
 	}
-	free(key);
+	key_len = 0;
+	while (str[key_len] && is_alnum(str[key_len]))
+		key_len++;
+	var = find_var(envp, key, key_len);
+	if (!var)
+		return (j);
+	i = key_len + 1;
+	while (var[i])
+		new_str[j++] = var[i++];
 	return (j);
 }
 
-char	*expd_line(char **envp, char *str)
+void	fill_str(char **envp, char *str, char *new_str)
 {
-	char	*new_str;
-	int		i;
-	int		j;
-	int		status;
+	int	i;
+	int	j;
+	int	inside_sq;
+	int	status;
 
-	new_str = malloc(str_newsize(envp, str) + 1);
 	i = 0;
 	j = 0;
+	inside_sq = 0;
 	while (str[i])
 	{
-		status = is_expandable(str[i]);
+		status = is_expandable(str + i, &inside_sq);
 		if (status && is_num(str[i + 1]))
 			i++;
-		else if (status && is_keychr(str[i + 1]))
+		else if (status && is_alnum(str[i + 1]))
 		{
 			j = cat_key_val(envp, str + ++i, new_str, j);
-			while (str[i + 1] && is_keychr(str[i + 1]))
+			while (str[i + 1] && is_alnum(str[i + 1]))
 				i++;
 		}
 		else
@@ -145,5 +119,15 @@ char	*expd_line(char **envp, char *str)
 		i++;
 	}
 	new_str[j] = '\0';
+}
+
+char	*expd_line(char **envp, char *str)
+{
+	char	*new_str;
+
+	new_str = malloc(str_newsize(envp, str) + 1);
+	if (!new_str)
+		expand_error();
+	fill_str(envp, str, new_str);
 	return (new_str);
 }
