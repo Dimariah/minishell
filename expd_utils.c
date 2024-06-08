@@ -6,43 +6,63 @@
 /*   By: yiken <yiken@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/02 18:20:45 by yiken             #+#    #+#             */
-/*   Updated: 2024/06/07 20:41:57 by yiken            ###   ########.fr       */
+/*   Updated: 2024/06/08 16:17:24 by yiken            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <unistd.h>
 #include <stdlib.h>
 
-int	ft_strncmp(char *s1, char *s2, size_t n)
+int	ft_strncmp(char *s1, char *s2, size_t n);
+int	is_alnum(char c);
+
+int	has_closure(char *str, char c)
 {
 	int	i;
 
-	i = 0;
-	while (s1[i] && s2[i] && s1[i] == s2[i] && n-- > 1)
-		i++;
-	return (s1[i] - s2[i]);
-}
-
-int	ft_strlen(char *str)
-{
-	int	i;
-
-	i = 0;
+	i = 1;
 	while (str[i])
+	{
+		if (str[i] == c)
+			return (1);
 		i++;
-	return (i);
+	}
+	return (0);
 }
 
-int	is_keychr(char c)
+int	is_expandable(char *str, int *inside_sq)
 {
-	return ((c >= 'a' && c <= 'z')
-		|| (c >= 'A' && c <= 'Z')
-		|| (c >= '0' && c <= '9'));
+	static int	inside_dq;
+
+	if (*str == '\'' && !inside_dq)
+	{
+		if (*inside_sq || has_closure(str, *str))
+			*inside_sq = !(*inside_sq);
+	}
+	if (*str == '\"' && !(*inside_sq))
+	{
+		if (inside_dq || has_closure(str, *str))
+			inside_dq = !inside_dq;
+	}
+	return (*str == '$' && !(*inside_sq));
 }
 
-int	is_num(char c)
+char	*find_var(char **envp, char *key, int key_len)
 {
-	return (c >= '0' && c <= '9');
+	int	i;
+
+	i = 0;
+	while (envp[i])
+	{
+		if (!ft_strncmp(envp[i], key, key_len))
+		{
+			free(key);
+			return (envp[i]);
+		}
+		i++;
+	}
+	free(key);
+	return (NULL);
 }
 
 void	expand_error(void)
@@ -58,13 +78,13 @@ char	*trim_key(char *str)
 	int		i;
 
 	key_len = 0;
-	while (str[key_len] && is_keychr(str[key_len]))
+	while (str[key_len] && is_alnum(str[key_len]))
 		key_len++;
 	key = malloc(key_len + 2);
 	if (!key)
 		return (NULL);
 	i = 0;
-	while (str[i] && is_keychr(str[i]))
+	while (str[i] && is_alnum(str[i]))
 	{
 		key[i] = str[i];
 		i++;
