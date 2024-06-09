@@ -6,7 +6,7 @@
 /*   By: yiken <yiken@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/02 17:58:51 by yiken             #+#    #+#             */
-/*   Updated: 2024/06/08 16:14:52 by yiken            ###   ########.fr       */
+/*   Updated: 2024/06/09 18:12:32 by yiken            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@ int		is_expandable(char *str, int *inside_sq);
 char	*find_var(char **envp, char *key, int key_len);
 void	expand_error(void);
 
-int	var_len(char **envp, char *str)
+int	var_len(char **envp, char *str, int *cntr)
 {
 	char	*key;
 	int		key_len;
@@ -30,14 +30,15 @@ int	var_len(char **envp, char *str)
 
 	key = trim_key(str);
 	if (!key)
-		expand_error();
+		return (-1);
 	key_len = 0;
 	while (str[key_len] && is_alnum(str[key_len]))
 		key_len++;
 	var = find_var(envp, key, key_len + 1);
 	if (!var)
 		return (0);
-	return (ft_strlen(var + (key_len + 1)));
+	*cntr += ft_strlen(var + (key_len + 1));
+	return (0);
 }
 
 int	str_newsize(char **envp, char *str)
@@ -57,7 +58,8 @@ int	str_newsize(char **envp, char *str)
 			i++;
 		else if (status && is_alnum(str[i + 1]))
 		{
-			cntr += var_len(envp, str + ++i);
+			if (var_len(envp, str + ++i, &cntr) == -1)
+				return (-1);
 			while (str[i + 1] && is_alnum(str[i + 1]))
 				i++;
 		}
@@ -68,7 +70,7 @@ int	str_newsize(char **envp, char *str)
 	return (cntr);
 }
 
-int	cat_key_val(char **envp, char *str, char *new_str, int j)
+int	cat_key_val(char **envp, char *str, char *new_str, int *j)
 {
 	char	*key;
 	int		key_len;
@@ -77,57 +79,63 @@ int	cat_key_val(char **envp, char *str, char *new_str, int j)
 
 	key = trim_key(str);
 	if (!key)
-	{
-		free(new_str);
-		expand_error();
-	}
+		return (-1);
 	key_len = 0;
 	while (str[key_len] && is_alnum(str[key_len]))
 		key_len++;
-	var = find_var(envp, key, key_len);
+	var = find_var(envp, key, key_len + 1);
 	if (!var)
-		return (j);
+		return (0);
 	i = key_len + 1;
 	while (var[i])
-		new_str[j++] = var[i++];
-	return (j);
+		new_str[(*j)++] = var[i++];
+	return (0);
 }
 
-void	fill_str(char **envp, char *str, char *new_str)
+int	fill_str(char **envp, char *str, char *new_str)
 {
 	int	i;
 	int	j;
 	int	inside_sq;
 	int	status;
 
-	i = 0;
+	i = -1;
 	j = 0;
 	inside_sq = 0;
-	while (str[i])
+	while (str[++i])
 	{
 		status = is_expandable(str + i, &inside_sq);
 		if (status && is_num(str[i + 1]))
 			i++;
 		else if (status && is_alnum(str[i + 1]))
 		{
-			j = cat_key_val(envp, str + ++i, new_str, j);
+			if (cat_key_val(envp, str + ++i, new_str, &j) == -1)
+				return (-1);
 			while (str[i + 1] && is_alnum(str[i + 1]))
 				i++;
 		}
 		else
 			new_str[j++] = str[i];
-		i++;
 	}
 	new_str[j] = '\0';
+	return (0);
 }
 
 char	*expd_line(char **envp, char *str)
 {
 	char	*new_str;
+	int		new_size;
 
-	new_str = malloc(str_newsize(envp, str) + 1);
+	new_size = str_newsize(envp, str);
+	if (new_size == -1)
+		return (expand_error(), NULL);
+	new_str = malloc(new_size + 1);
 	if (!new_str)
-		expand_error();
-	fill_str(envp, str, new_str);
+		return (expand_error(), NULL);
+	if (fill_str(envp, str, new_str) == -1)
+	{
+		free(new_str);
+		return (expand_error(), NULL);
+	}
 	return (new_str);
 }
