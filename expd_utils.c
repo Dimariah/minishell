@@ -6,7 +6,7 @@
 /*   By: yiken <yiken@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/02 18:20:45 by yiken             #+#    #+#             */
-/*   Updated: 2024/06/09 17:43:32 by yiken            ###   ########.fr       */
+/*   Updated: 2024/06/10 12:03:22 by yiken            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,21 +30,30 @@ int	has_closure(char *str, char c)
 	return (0);
 }
 
-int	is_expandable(char *str, int *inside_sq)
+int	is_expandable(char *str)
 {
 	static int	inside_dq;
+	static int	inside_sq;
+	static int	inside_uq;
 
 	if (*str == '\'' && !inside_dq)
-	{
-		if (*inside_sq || has_closure(str, *str))
-			*inside_sq = !(*inside_sq);
-	}
-	if (*str == '\"' && !(*inside_sq))
+		inside_sq = !inside_sq;
+	if (*str == '\"' && !inside_sq)
 	{
 		if (inside_dq || has_closure(str, *str))
+		{
+			inside_uq = 0;
 			inside_dq = !inside_dq;
+		}
+		else
+			inside_uq = 1;
 	}
-	return (*str == '$' && !(*inside_sq));
+	if (*(str + 1) == '\0')
+	{
+		inside_sq = 0;
+		inside_uq = 0;
+	}
+	return (*str == '$' && !inside_sq && !inside_uq);
 }
 
 char	*find_var(char **envp, char *key, int key_len)

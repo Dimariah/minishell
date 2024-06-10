@@ -6,12 +6,13 @@
 /*   By: yiken <yiken@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/06 17:16:09 by yiken             #+#    #+#             */
-/*   Updated: 2024/06/09 18:20:47 by yiken            ###   ########.fr       */
+/*   Updated: 2024/06/10 12:04:15 by yiken            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <readline/readline.h>
-#include <libc.h>
+#include <readline/history.h>
+#include <stdlib.h>
 
 char	*expd_line(char **envp, char *str);
 
