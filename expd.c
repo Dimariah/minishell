@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   expd.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: messkely <messkely@student.42.fr>          +#+  +:+       +#+        */
+/*   By: yiken <yiken@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/02 17:58:51 by yiken             #+#    #+#             */
-/*   Updated: 2024/06/10 19:04:41 by messkely         ###   ########.fr       */
+/*   Updated: 2024/06/10 20:25:08 by yiken            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@
 
 int		is_keychr(char c);
 int		ft_strlen(char *str);
-int		is_num(char c);
+int		to_remove(char c);
 char	*trim_key(char *str);
 int		is_expandable(char *str);
 char	*find_var(char **envp, char *key, int key_len);
@@ -52,7 +52,7 @@ int	str_newsize(char **envp, char *str)
 	while (str[i])
 	{
 		status = is_expandable(str + i);
-		if (status && is_num(str[i + 1]))
+		if (status && to_remove(str[i + 1]))
 			i++;
 		else if (status && is_keychr(str[i + 1]))
 		{
@@ -101,7 +101,7 @@ int	fill_str(char **envp, char *str, char *new_str)
 	while (str[i])
 	{
 		status = is_expandable(str + i);
-		if (status && is_num(str[i + 1]))
+		if (status && to_remove(str[i + 1]))
 			i++;
 		else if (status && is_keychr(str[i + 1]))
 		{

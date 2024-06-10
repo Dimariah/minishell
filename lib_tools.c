@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   lib_tools.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: messkely <messkely@student.42.fr>          +#+  +:+       +#+        */
+/*   By: yiken <yiken@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/08 16:02:58 by yiken             #+#    #+#             */
-/*   Updated: 2024/06/10 19:05:19 by messkely         ###   ########.fr       */
+/*   Updated: 2024/06/10 20:21:37 by yiken            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,7 +39,7 @@ int	is_keychr(char c)
 		|| (c >= '0' && c <= '9'));
 }
 
-int	is_num(char c)
+int	to_remove(char c)
 {
-	return (c >= '0' && c <= '9');
+	return ((c >= '0' && c <= '9') || c == '@');
 }
