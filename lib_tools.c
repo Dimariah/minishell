@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   lib_tools.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yiken <yiken@student.42.fr>                +#+  +:+       +#+        */
+/*   By: messkely <messkely@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/08 16:02:58 by yiken             #+#    #+#             */
-/*   Updated: 2024/06/08 16:15:35 by yiken            ###   ########.fr       */
+/*   Updated: 2024/06/10 19:05:19 by messkely         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,9 +32,9 @@ int	ft_strlen(char *str)
 	return (i);
 }
 
-int	is_alnum(char c)
+int	is_keychr(char c)
 {
-	return ((c >= 'a' && c <= 'z')
+	return ((c >= 'a' && c <= 'z') || c == '_'
 		|| (c >= 'A' && c <= 'Z')
 		|| (c >= '0' && c <= '9'));
 }
