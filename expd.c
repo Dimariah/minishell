@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   expd.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yiken <yiken@student.42.fr>                +#+  +:+       +#+        */
+/*   By: messkely <messkely@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/02 17:58:51 by yiken             #+#    #+#             */
-/*   Updated: 2024/06/10 11:01:39 by yiken            ###   ########.fr       */
+/*   Updated: 2024/06/10 19:04:41 by messkely         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 #include <stdlib.h>
 #include <readline/readline.h>
 
-int		is_alnum(char c);
+int		is_keychr(char c);
 int		ft_strlen(char *str);
 int		is_num(char c);
 char	*trim_key(char *str);
@@ -32,7 +32,7 @@ int	var_len(char **envp, char *str, int *cntr)
 	if (!key)
 		return (-1);
 	key_len = 0;
-	while (str[key_len] && is_alnum(str[key_len]))
+	while (str[key_len] && is_keychr(str[key_len]))
 		key_len++;
 	var = find_var(envp, key, key_len + 1);
 	if (!var)
@@ -54,11 +54,11 @@ int	str_newsize(char **envp, char *str)
 		status = is_expandable(str + i);
 		if (status && is_num(str[i + 1]))
 			i++;
-		else if (status && is_alnum(str[i + 1]))
+		else if (status && is_keychr(str[i + 1]))
 		{
 			if (var_len(envp, str + ++i, &cntr) == -1)
 				return (-1);
-			while (str[i + 1] && is_alnum(str[i + 1]))
+			while (str[i + 1] && is_keychr(str[i + 1]))
 				i++;
 		}
 		else
@@ -79,7 +79,7 @@ int	cat_key_val(char **envp, char *str, char *new_str, int *j)
 	if (!key)
 		return (-1);
 	key_len = 0;
-	while (str[key_len] && is_alnum(str[key_len]))
+	while (str[key_len] && is_keychr(str[key_len]))
 		key_len++;
 	var = find_var(envp, key, key_len + 1);
 	if (!var)
@@ -103,11 +103,11 @@ int	fill_str(char **envp, char *str, char *new_str)
 		status = is_expandable(str + i);
 		if (status && is_num(str[i + 1]))
 			i++;
-		else if (status && is_alnum(str[i + 1]))
+		else if (status && is_keychr(str[i + 1]))
 		{
 			if (cat_key_val(envp, str + ++i, new_str, &j) == -1)
 				return (-1);
-			while (str[i + 1] && is_alnum(str[i + 1]))
+			while (str[i + 1] && is_keychr(str[i + 1]))
 				i++;
 		}
 		else

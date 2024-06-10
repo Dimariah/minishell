@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   expd_utils.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yiken <yiken@student.42.fr>                +#+  +:+       +#+        */
+/*   By: messkely <messkely@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/02 18:20:45 by yiken             #+#    #+#             */
-/*   Updated: 2024/06/10 12:03:22 by yiken            ###   ########.fr       */
+/*   Updated: 2024/06/10 19:04:41 by messkely         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 #include <stdlib.h>
 
 int	ft_strncmp(char *s1, char *s2, size_t n);
-int	is_alnum(char c);
+int	is_keychr(char c);
 
 int	has_closure(char *str, char c)
 {
@@ -86,13 +86,13 @@ char	*trim_key(char *str)
 	int		i;
 
 	key_len = 0;
-	while (str[key_len] && is_alnum(str[key_len]))
+	while (str[key_len] && is_keychr(str[key_len]))
 		key_len++;
 	key = malloc(key_len + 2);
 	if (!key)
 		return (NULL);
 	i = 0;
-	while (str[i] && is_alnum(str[i]))
+	while (str[i] && is_keychr(str[i]))
 	{
 		key[i] = str[i];
 		i++;
