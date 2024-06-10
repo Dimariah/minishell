@@ -6,7 +6,7 @@
 /*   By: yiken <yiken@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/02 17:58:51 by yiken             #+#    #+#             */
-/*   Updated: 2024/06/09 18:12:32 by yiken            ###   ########.fr       */
+/*   Updated: 2024/06/10 11:01:39 by yiken            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@ int		is_alnum(char c);
 int		ft_strlen(char *str);
 int		is_num(char c);
 char	*trim_key(char *str);
-int		is_expandable(char *str, int *inside_sq);
+int		is_expandable(char *str);
 char	*find_var(char **envp, char *key, int key_len);
 void	expand_error(void);
 
@@ -45,15 +45,13 @@ int	str_newsize(char **envp, char *str)
 {
 	int	i;
 	int	cntr;
-	int	inside_sq;
 	int	status;
 
 	i = 0;
 	cntr = 0;
-	inside_sq = 0;
 	while (str[i])
 	{
-		status = is_expandable(str + i, &inside_sq);
+		status = is_expandable(str + i);
 		if (status && is_num(str[i + 1]))
 			i++;
 		else if (status && is_alnum(str[i + 1]))
@@ -96,15 +94,13 @@ int	fill_str(char **envp, char *str, char *new_str)
 {
 	int	i;
 	int	j;
-	int	inside_sq;
 	int	status;
 
-	i = -1;
+	i = 0;
 	j = 0;
-	inside_sq = 0;
-	while (str[++i])
+	while (str[i])
 	{
-		status = is_expandable(str + i, &inside_sq);
+		status = is_expandable(str + i);
 		if (status && is_num(str[i + 1]))
 			i++;
 		else if (status && is_alnum(str[i + 1]))
@@ -116,6 +112,7 @@ int	fill_str(char **envp, char *str, char *new_str)
 		}
 		else
 			new_str[j++] = str[i];
+		i++;
 	}
 	new_str[j] = '\0';
 	return (0);
