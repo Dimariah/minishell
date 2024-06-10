@@ -6,7 +6,7 @@
 /*   By: yiken <yiken@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/02 18:20:45 by yiken             #+#    #+#             */
-/*   Updated: 2024/06/08 16:17:24 by yiken            ###   ########.fr       */
+/*   Updated: 2024/06/09 17:43:32 by yiken            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,7 +68,6 @@ char	*find_var(char **envp, char *key, int key_len)
 void	expand_error(void)
 {
 	write(2, "error while expanding\n", 22);
-	exit(1);
 }
 
 char	*trim_key(char *str)
