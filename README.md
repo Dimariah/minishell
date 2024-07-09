@@ -1,4 +1,4 @@
 # minishell
 
 
-```let's drink some tee :tee:```
+```let's drink some tea :tea:```
