@@ -6,7 +6,7 @@
 /*   By: yiken <yiken@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/03 10:54:43 by messkely          #+#    #+#             */
-/*   Updated: 2024/07/08 13:17:39 by yiken            ###   ########.fr       */
+/*   Updated: 2024/07/09 15:44:44 by yiken            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -87,11 +87,9 @@ char	**process_token_cp(char *s, char token, char **av, int tok_count)
 
 char	**process_token(char *s, char token)
 {
-	int		start;
 	int		tok_count;
 	char	**av;
 
-	start = 0;
 	tok_count = 0;
 	av = malloc((ft_strlen(s) / 2 + 2) * sizeof(char *));
 	if (!av)

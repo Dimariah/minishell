@@ -6,7 +6,7 @@
 /*   By: yiken <yiken@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/26 15:08:37 by yiken             #+#    #+#             */
-/*   Updated: 2024/07/08 13:12:05 by yiken            ###   ########.fr       */
+/*   Updated: 2024/07/09 17:30:43 by yiken            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -111,44 +111,26 @@ int	cd(t_smplcmd *cmdlst, char ***envp)
 {
 	char	*npath;
 	char	cwd[1024];
+	int		chdir_st;
 
 	if (!getcwd(cwd, sizeof(cwd)))
 		return (write(2, "cd: ", 4), perror("getwcwd"), 1);
 	npath = get_npath(cmdlst->argv, *envp);
 	if (!npath)
 		return (1);
-	if (!chdir(npath))
+	chdir_st = chdir(npath);
+	if ((!chdir_st || !(*npath))
+		&& cmdlst->argv[1] && cmdlst->argv[1][0] == '-')
+	{
+		write(1, npath, ft_strlen(npath));
+		write(1, "\n", 1);
+	}
+	if (!chdir_st)
 	{
 		if (!oldpwd_up(cwd, envp))
 			return (1);
 	}
 	else if (npath[0])
 		return (write(2, "cd: ", 4), perror(npath), 1);
-	if (cmdlst->argv[1] && cmdlst->argv[1][0] == '-')
-	{
-		write(1, npath, ft_strlen(npath));
-		write(1, "\n", 1);
-	}
 	return (0);
 }
-
-// int main(int ac, char **av, char **envp)
-// {
-// 	t_smplcmd	cmdlst;
-// 	char		cwd[1024];
-
-// 	char	*argv[] = {"cd", "/BIN", 0};
-// 	cmdlst.argv = argv;
-// 	int status = cd(&cmdlst, &envp);
-// 	if (getcwd(cwd, sizeof(cwd)) != NULL)
-// 		printf("first call cwd: %s\n", cwd);  //expecting home
-// 	printf("first call status: %d\n", status); //expecting 0
-// 	//second call
-
-// 	char	*arv[] = {"cd", "-", 0};
-// 	cmdlst.argv = arv;
-// 	status = cd(&cmdlst, &envp);
-// 	if (getcwd(cwd, sizeof(cwd)) != NULL)
-// 		printf("second call cwd: %s\n", cwd); //expecting home/out
-// 	printf("second call status: %d\n", status); //0
-// }
