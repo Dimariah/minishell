@@ -3,15 +3,15 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yiken <yiken@student.42.fr>                +#+  +:+       +#+        */
+/*   By: messkely <messkely@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/06 17:16:09 by yiken             #+#    #+#             */
-/*   Updated: 2024/07/08 18:01:28 by yiken            ###   ########.fr       */
+/*   Updated: 2024/07/10 17:52:19 by messkely         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-
+int	g_beta_pid = -1;
 char	*expd_line(char **envp, char *str, int status);
 char	*ft_strdup(char *str);
 void	ft_parser(t_smplcmd **pmp, char *input);
@@ -59,6 +59,7 @@ void	minishell_loop(t_smplcmd **cmdlst, char	***envp)
 	status = 0;
 	while (1)
 	{
+		rl_catch_signals = 0;
 		line = readline("minishell> ");
 		if (!line)
 			break ;
@@ -99,6 +100,7 @@ int	main(int ac, char **av, char **envp)
 	nenvp = envp_dup(envp);
 	if (!nenvp)
 		return (write(2, "envp duplication error\n", 23), 1);
+	ft_handle_signals();
 	minishell_loop(&cmdlst, &nenvp);
 	free_nenvp(nenvp);
 }

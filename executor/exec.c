@@ -3,16 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   exec.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yiken <yiken@student.42.fr>                +#+  +:+       +#+        */
+/*   By: messkely <messkely@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/16 16:47:34 by yiken             #+#    #+#             */
-/*   Updated: 2024/07/10 16:27:27 by yiken            ###   ########.fr       */
+/*   Updated: 2024/07/10 17:52:36 by messkely         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-int		g_beta_pid;
+extern int	g_beta_pid;
 char	*get_path(char *xcutable, char **envp, int *status, t_smplcmd *cmdlst);
 int		inp_reds(char **reds, int *std);
 int		out_reds(char **reds);
