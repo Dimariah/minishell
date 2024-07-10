@@ -6,7 +6,7 @@
 /*   By: yiken <yiken@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/16 16:47:34 by yiken             #+#    #+#             */
-/*   Updated: 2024/07/09 16:18:02 by yiken            ###   ########.fr       */
+/*   Updated: 2024/07/10 16:27:27 by yiken            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -114,6 +114,6 @@ int	exec_cmds(t_smplcmd *cmdlst, char ***envp)
 		(close(STDIN_FILENO), close(STDOUT_FILENO));
 		exit(status);
 	}
-	restore_std(std);
-	return (wait(&status), get_status(status));
+	wait(&status);
+	return (restore_std(std), get_status(status));
 }

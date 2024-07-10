@@ -6,14 +6,13 @@
 /*   By: yiken <yiken@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/07 14:10:38 by yiken             #+#    #+#             */
-/*   Updated: 2024/07/08 10:36:42 by yiken            ###   ########.fr       */
+/*   Updated: 2024/07/10 16:51:44 by yiken            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
 int		ft_isdigit(int c);
-void	free_cmdlst(t_smplcmd *cmdlst);
 int		envp_len(char **envp);
 int		ft_isspace(char c);
 int		ft_strlen(char *str);
@@ -129,8 +128,8 @@ int	ft_exit(t_smplcmd *cmdlst, char **args, char **envp)
 	}
 	else if (i == 2 && check_digit(args[1]))
 	{
-		cleanup(cmdlst, envp);
-		exit(ft_atoi(args[1]));
+		i = ft_atoi(args[1]);
+		(cleanup(cmdlst, envp), exit(i));
 	}
 	return (0);
 }
