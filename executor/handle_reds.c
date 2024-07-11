@@ -6,7 +6,7 @@
 /*   By: yiken <yiken@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/16 16:44:48 by yiken             #+#    #+#             */
-/*   Updated: 2024/07/08 16:02:42 by yiken            ###   ########.fr       */
+/*   Updated: 2024/07/11 12:29:39 by yiken            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,7 +78,7 @@ int	out_reds(char **reds)
 			dup2(fdout, STDOUT_FILENO);
 			close(fdout);
 		}
-		else if (!ft_strncmp(reds[i], ">>", 2))
+		else if (!ft_strncmp(reds[i], ">>", 3))
 		{
 			fdout = open(reds[++i], O_APPEND | O_CREAT | O_WRONLY, 0644);
 			if (fdout == -1)

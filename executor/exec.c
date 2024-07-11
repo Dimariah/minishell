@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: messkely <messkely@student.42.fr>          +#+  +:+       +#+        */
+/*   By: yiken <yiken@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/16 16:47:34 by yiken             #+#    #+#             */
-/*   Updated: 2024/07/10 17:52:36 by messkely         ###   ########.fr       */
+/*   Updated: 2024/07/11 16:10:15 by yiken            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,7 +80,7 @@ int	exec_cmd(t_smplcmd *cmdlst, int *std, char **envp, int lst_size)
 	if (pid == -1)
 	{
 		dup2(pipefd[0], STDIN_FILENO);
-		return (close(pipefd[0]), perror("fork"), 1);
+		return (close(pipefd[0]), close(pipefd[1]), perror("fork"), 1);
 	}
 	else if (pid == 0)
 		child_process(cmdlst, pipefd, envp);
@@ -111,7 +111,7 @@ int	exec_cmds(t_smplcmd *cmdlst, char ***envp)
 			status = exec_cmd(cmdlst, std, *envp, lst_size);
 			cmdlst = cmdlst->next;
 		}
-		(close(STDIN_FILENO), close(STDOUT_FILENO));
+		restore_std(std);
 		exit(status);
 	}
 	wait(&status);

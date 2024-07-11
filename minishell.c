@@ -3,14 +3,15 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: messkely <messkely@student.42.fr>          +#+  +:+       +#+        */
+/*   By: yiken <yiken@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/06 17:16:09 by yiken             #+#    #+#             */
-/*   Updated: 2024/07/10 17:52:19 by messkely         ###   ########.fr       */
+/*   Updated: 2024/07/11 11:24:53 by yiken            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+
 int	g_beta_pid = -1;
 char	*expd_line(char **envp, char *str, int status);
 char	*ft_strdup(char *str);
@@ -50,7 +51,7 @@ char	**envp_dup(char **envp)
 	return (envpd);
 }
 
-void	minishell_loop(t_smplcmd **cmdlst, char	***envp)
+int	minishell_loop(t_smplcmd **cmdlst, char	***envp)
 {
 	char		*line;
 	char		*expdd_line;
@@ -76,6 +77,7 @@ void	minishell_loop(t_smplcmd **cmdlst, char	***envp)
 		status = exec_cmds(*cmdlst, envp);
 		free_list(cmdlst);
 	}
+	return (status);
 }
 
 static void	free_nenvp(char **nenvp)
@@ -92,6 +94,7 @@ int	main(int ac, char **av, char **envp)
 {
 	char		**nenvp;
 	t_smplcmd	*cmdlst;
+	int			status;
 
 	(void)av;
 	cmdlst = NULL;
@@ -101,6 +104,7 @@ int	main(int ac, char **av, char **envp)
 	if (!nenvp)
 		return (write(2, "envp duplication error\n", 23), 1);
 	ft_handle_signals();
-	minishell_loop(&cmdlst, &nenvp);
+	status = minishell_loop(&cmdlst, &nenvp);
 	free_nenvp(nenvp);
+	return (status);
 }
