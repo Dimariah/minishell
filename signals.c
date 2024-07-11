@@ -6,7 +6,7 @@
 /*   By: messkely <messkely@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/10 08:20:27 by messkely          #+#    #+#             */
-/*   Updated: 2024/07/10 17:54:59 by messkely         ###   ########.fr       */
+/*   Updated: 2024/07/10 18:13:55 by messkely         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,6 @@ extern int	g_beta_pid;
 
 void	ft_handle_sigint(int sig)
 {
-
 	if (g_beta_pid > 0)
 		kill(g_beta_pid, SIGTERM);
 	if (g_beta_pid == -1 || g_beta_pid > 0)
