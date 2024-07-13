@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   lib_tools3.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yiken <yiken@student.42.fr>                +#+  +:+       +#+        */
+/*   By: messkely <messkely@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/07 15:00:41 by messkely          #+#    #+#             */
-/*   Updated: 2024/07/08 13:17:05 by yiken            ###   ########.fr       */
+/*   Updated: 2024/07/13 10:43:40 by messkely         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,4 +42,13 @@ int	ft_arglen(char **args)
 	while (args[i])
 		i++;
 	return (i);
+}
+
+int	exit_status(int exit_status)
+{
+	static int	value;
+
+	if (exit_status != -500)
+		value = exit_status;
+	return (value);
 }

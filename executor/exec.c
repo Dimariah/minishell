@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yiken <yiken@student.42.fr>                +#+  +:+       +#+        */
+/*   By: messkely <messkely@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/16 16:47:34 by yiken             #+#    #+#             */
-/*   Updated: 2024/07/11 16:10:15 by yiken            ###   ########.fr       */
+/*   Updated: 2024/07/13 12:27:34 by messkely         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,7 @@ int	get_status(int status)
 	if (WIFEXITED(status))
 		return (WEXITSTATUS(status));
 	if (WIFSIGNALED(status))
-		return (130);
+		return (WTERMSIG(status) + 128);
 	write(2, "process terminated abnormally\n", 30);
 	return (1);
 }
@@ -100,12 +100,13 @@ int	exec_cmds(t_smplcmd *cmdlst, char ***envp)
 	std[0] = dup(STDIN_FILENO);
 	std[1] = dup(STDOUT_FILENO);
 	if (!cmdlst->next && exec_pbuin(cmdlst, envp, &status, std))
-		return (restore_std(std), status);
+		return (restore_std(std), status); // why you restore std
 	g_beta_pid = fork();
 	if (g_beta_pid == -1)
 		return (perror("fork"), 1);
 	if (g_beta_pid == 0)
 	{
+		ch_handle_signals();
 		while (cmdlst)
 		{
 			status = exec_cmd(cmdlst, std, *envp, lst_size);
@@ -115,5 +116,5 @@ int	exec_cmds(t_smplcmd *cmdlst, char ***envp)
 		exit(status);
 	}
 	wait(&status);
-	return (restore_std(std), get_status(status));
+	return (restore_std(std), exit_status(get_status(status)));
 }
