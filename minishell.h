@@ -6,7 +6,7 @@
 /*   By: messkely <messkely@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/29 19:51:11 by messkely          #+#    #+#             */
-/*   Updated: 2024/07/10 17:52:57 by messkely         ###   ########.fr       */
+/*   Updated: 2024/07/13 09:47:15 by messkely         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,6 +31,9 @@ typedef struct s_smplcmd
 
 int			check_syntax(char *input);
 void		ft_handle_signals(void);
+void		ch_handle_signals(void);
+int			exit_status(int exit_status);
+void		c_handle_signals(void);
 void		ft_error(char *s, char c);
 
 char		*rm_escape_char(char *s);
