@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   expd.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: messkely <messkely@student.42.fr>          +#+  +:+       +#+        */
+/*   By: yiken <yiken@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/02 17:58:51 by yiken             #+#    #+#             */
-/*   Updated: 2024/07/13 13:12:21 by messkely         ###   ########.fr       */
+/*   Updated: 2024/07/19 16:59:47 by yiken            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -128,14 +128,14 @@ char	*expd_line(char **envp, char *str, int code)
 
 	new_size = str_newsize(envp, str, code);
 	if (new_size == -1)
-		return (expand_error(), NULL);
+		return (write(2, "error while expanding\n", 22), NULL);
 	new_str = malloc(new_size + 1);
 	if (!new_str)
-		return (expand_error(), NULL);
+		return (write(2, "error while expanding\n", 22), NULL);
 	if (fill_str(envp, str, new_str, code) == -1)
 	{
 		free(new_str);
-		return (expand_error(), NULL);
+		return (write(2, "error while expanding\n", 22), NULL);
 	}
 	return (new_str);
 }
