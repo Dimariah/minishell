@@ -6,7 +6,7 @@
 /*   By: yiken <yiken@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/07 14:42:50 by messkely          #+#    #+#             */
-/*   Updated: 2024/07/09 15:45:51 by yiken            ###   ########.fr       */
+/*   Updated: 2024/07/19 18:59:12 by yiken            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,15 +63,21 @@ char	*ft_strtrim(char *s1, char *set)
 	return (ptr);
 }
 
-int	lst_len(t_smplcmd *cmdlst)
+void	lst_len_init(t_smplcmd *cmdlst)
 {
-	int	i;
+	t_smplcmd	*tmp;
+	int			i;
 
+	tmp = cmdlst;
 	i = 0;
-	while (cmdlst)
+	while (tmp)
 	{
 		i++;
+		tmp = tmp->next;
+	}
+	while (cmdlst)
+	{
+		cmdlst->list_len = i;
 		cmdlst = cmdlst->next;
 	}
-	return (i);
 }
