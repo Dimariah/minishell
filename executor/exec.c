@@ -6,7 +6,7 @@
 /*   By: yiken <yiken@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/16 16:47:34 by yiken             #+#    #+#             */
-/*   Updated: 2024/07/19 17:10:40 by yiken            ###   ########.fr       */
+/*   Updated: 2024/07/19 19:26:19 by yiken            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,9 +17,9 @@ char	*get_path(char *xcutable, char **envp, int *status, t_smplcmd *cmdlst);
 int		inp_reds(char **reds, int *std);
 int		out_reds(char **reds);
 int		ft_strncmp(char *s1, char *s2, size_t n);
-int		exec_pbuin(t_smplcmd *cmdlst, char ***envp, int *status, int *std);
+int		exec_pbuin(t_smplcmd *cmdlst, char ***envp, int *status);
 void	restore_std(int *std);
-int		lst_len(t_smplcmd *cmdlst);
+void	lst_len_init(t_smplcmd *cmdlst);
 
 int	pipe_dup(int *pipefd)
 {
@@ -60,18 +60,16 @@ void	child_process(t_smplcmd *cmdlst, int *pipefd, char **envp)
 	exit(1);
 }
 
-int	exec_cmd(t_smplcmd *cmdlst, int *std, char **envp, int lst_size)
+int	exec_cmd(t_smplcmd *cmdlst, int *std, char **envp)
 {
 	int		pipefd[2];
 	pid_t	pid;
 	int		status;
 
-	if (lst_size > 1)
-		dup2(std[1], STDOUT_FILENO);
 	if (cmdlst->next && pipe(pipefd) == -1)
 		return (perror("pipe"), 1);
-	if (lst_size > 1 && (!inp_reds(cmdlst->reds, std)
-			|| (cmdlst->next && !pipe_dup(pipefd)) || !out_reds(cmdlst->reds)))
+	if (!inp_reds(cmdlst->reds, std) || (cmdlst->next && !pipe_dup(pipefd))
+		|| (cmdlst->list_len > 1 && !out_reds(cmdlst->reds)))
 	{
 		dup2(pipefd[0], STDIN_FILENO);
 		return (close(pipefd[1]), close(pipefd[0]), 1);
@@ -85,6 +83,7 @@ int	exec_cmd(t_smplcmd *cmdlst, int *std, char **envp, int lst_size)
 	else if (pid == 0)
 		child_process(cmdlst, pipefd, envp);
 	wait(&status);
+	dup2(std[1], STDOUT_FILENO);
 	dup2(pipefd[0], STDIN_FILENO);
 	return (close(pipefd[0]), WEXITSTATUS(status));
 }
@@ -93,14 +92,13 @@ int	exec_cmds(t_smplcmd *cmdlst, char ***envp)
 {
 	int	status;
 	int	std[2];
-	int	lst_size;
 
-	lst_size = lst_len(cmdlst);
+	lst_len_init(cmdlst);
 	status = 0;
 	std[0] = dup(STDIN_FILENO);
 	std[1] = dup(STDOUT_FILENO);
-	if (!cmdlst->next && exec_pbuin(cmdlst, envp, &status, std))
-		return (restore_std(std), status); // why you restore std
+	if (!cmdlst->next && exec_pbuin(cmdlst, envp, &status))
+		return (restore_std(std), 1); // why you restore std
 	g_beta_pid = fork();
 	if (g_beta_pid == -1)
 		return (perror("fork"), 1);
@@ -109,7 +107,7 @@ int	exec_cmds(t_smplcmd *cmdlst, char ***envp)
 		ch_handle_signals();
 		while (cmdlst)
 		{
-			status = exec_cmd(cmdlst, std, *envp, lst_size);
+			status = exec_cmd(cmdlst, std, *envp);
 			cmdlst = cmdlst->next;
 		}
 		restore_std(std);
