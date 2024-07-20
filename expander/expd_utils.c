@@ -6,7 +6,7 @@
 /*   By: yiken <yiken@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/02 18:20:45 by yiken             #+#    #+#             */
-/*   Updated: 2024/06/28 11:31:01 by yiken            ###   ########.fr       */
+/*   Updated: 2024/07/19 17:01:33 by yiken            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,12 +29,26 @@ int	has_closure(char *str, char c)
 	return (0);
 }
 
+void	check_hdoc(char *str, int *after_hdoc, int out_qts, int out_dq)
+{
+	if (out_qts && *str == '<' && str[1] == '<')
+		*after_hdoc = 1;
+	if (*after_hdoc && out_dq && (*str == ' ' && str[-1] != ' '))
+	{
+		if (str[-1] != '<' || (str[-1] == '<' && str[-2] != '<'))
+			*after_hdoc = 0;
+	}
+}
+
 int	is_expandable(char *str)
 {
 	static int	inside_dq;
 	static int	inside_sq;
 	static int	inside_uq;
+	static int	after_hdoc;
 
+	check_hdoc(str, &after_hdoc,
+		(!inside_dq && !inside_sq && !inside_uq), !inside_dq);
 	if (*str == '\'' && !inside_dq)
 		inside_sq = !inside_sq;
 	if (*str == '\"' && !inside_sq)
@@ -52,7 +66,7 @@ int	is_expandable(char *str)
 		inside_sq = 0;
 		inside_uq = 0;
 	}
-	return (*str == '$' && !inside_sq && !inside_uq);
+	return (*str == '$' && !inside_sq && !inside_uq && !after_hdoc);
 }
 
 char	*find_var(char **envp, char *key, int key_len)
@@ -71,11 +85,6 @@ char	*find_var(char **envp, char *key, int key_len)
 	}
 	free(key);
 	return (NULL);
-}
-
-void	expand_error(void)
-{
-	write(2, "error while expanding\n", 22);
 }
 
 char	*trim_key(char *str)
