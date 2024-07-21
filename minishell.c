@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: messkely <messkely@student.42.fr>          +#+  +:+       +#+        */
+/*   By: yiken <yiken@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/06 17:16:09 by yiken             #+#    #+#             */
-/*   Updated: 2024/07/13 12:10:22 by messkely         ###   ########.fr       */
+/*   Updated: 2024/07/20 17:08:47 by yiken            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,7 +59,6 @@ void	minishell_loop(t_smplcmd **cmdlst, char	***envp)
 
 	while (1)
 	{
-		rl_catch_signals = 0;
 		line = readline("minishell> ");
 		if (!line)
 			break ;
@@ -70,7 +69,7 @@ void	minishell_loop(t_smplcmd **cmdlst, char	***envp)
 			continue ;
 		status = exit_status(-500);
 		expdd_line = expd_line(*envp, line, status);
-		if (!expdd_line)
+		if (!expdd_line || !(*expdd_line))
 			continue ;
 		free(line);
 		ft_parser(cmdlst, expdd_line);
