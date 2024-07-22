@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yiken <yiken@student.42.fr>                +#+  +:+       +#+        */
+/*   By: messkely <messkely@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/16 16:47:34 by yiken             #+#    #+#             */
-/*   Updated: 2024/07/20 16:41:23 by yiken            ###   ########.fr       */
+/*   Updated: 2024/07/21 23:58:03 by messkely         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 extern int	g_beta_pid;
 char	*get_path(char *xcutable, char **envp, int *status, t_smplcmd *cmdlst);
-int		inp_reds(char **reds, int *std);
+int		inp_reds(char **reds, int *std, t_smplcmd *cmdlst);
 int		out_reds(char **reds);
 int		ft_strncmp(char *s1, char *s2, size_t n);
 int		exec_pbuin(t_smplcmd *cmdlst, char ***envp, int *status);
@@ -68,7 +68,7 @@ int	exec_cmd(t_smplcmd *cmdlst, int *std, char **envp)
 
 	if (cmdlst->next && pipe(pipefd) == -1)
 		return (perror("pipe"), 1);
-	if (!inp_reds(cmdlst->reds, std) || (cmdlst->next && !pipe_dup(pipefd))
+	if (!inp_reds(cmdlst->reds, std, cmdlst) || (cmdlst->next && !pipe_dup(pipefd))
 		|| (cmdlst->list_len > 1 && !out_reds(cmdlst->reds)))
 	{
 		dup2(pipefd[0], STDIN_FILENO);
@@ -98,7 +98,7 @@ int	exec_cmds(t_smplcmd *cmdlst, char ***envp)
 	std[0] = dup(STDIN_FILENO);
 	std[1] = dup(STDOUT_FILENO);
 	if (!cmdlst->next && exec_pbuin(cmdlst, envp, &status))
-		return (restore_std(std), 1); // why you restore std
+		return (restore_std(std), 1);
 	g_beta_pid = fork();
 	if (g_beta_pid == -1)
 		return (perror("fork"), 1);
