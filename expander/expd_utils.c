@@ -6,14 +6,15 @@
 /*   By: yiken <yiken@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/02 18:20:45 by yiken             #+#    #+#             */
-/*   Updated: 2024/07/23 13:30:28 by yiken            ###   ########.fr       */
+/*   Updated: 2024/07/23 16:21:02 by yiken            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-int	ft_strncmp(char *s1, char *s2, size_t n);
-int	is_keychr(char c);
+int		ft_strncmp(char *s1, char *s2, size_t n);
+int		is_keychr(char c);
+void	flags_todef(int *inside_sq, int *inside_uq, int *after_hdoc);
 
 int	has_closure(char *str, char c)
 {
@@ -62,11 +63,7 @@ int	is_expandable(char *str)
 			inside_uq = 1;
 	}
 	if (*(str + 1) == '\0')
-	{
-		inside_sq = 0;
-		inside_uq = 0;
-		after_hdoc = 0;
-	}
+		flags_todef(&inside_sq, &inside_uq, &after_hdoc);
 	return (*str == '$' && !inside_sq && !inside_uq && !after_hdoc);
 }
 

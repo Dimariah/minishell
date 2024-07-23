@@ -6,7 +6,7 @@
 /*   By: yiken <yiken@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/07 15:00:41 by messkely          #+#    #+#             */
-/*   Updated: 2024/07/23 13:44:48 by yiken            ###   ########.fr       */
+/*   Updated: 2024/07/23 16:21:39 by yiken            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,4 +51,11 @@ int	exit_status(int exit_status)
 	if (exit_status != -500)
 		value = exit_status;
 	return (value);
+}
+
+void	flags_todef(int *inside_sq, int *inside_uq, int *after_hdoc)
+{
+	*inside_sq = 0;
+	*inside_uq = 0;
+	*after_hdoc = 0;
 }
