@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   linked_list_utils.c                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: messkely <messkely@student.42.fr>          +#+  +:+       +#+        */
+/*   By: yiken <yiken@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/10 20:28:39 by messkely          #+#    #+#             */
-/*   Updated: 2024/07/21 23:51:58 by messkely         ###   ########.fr       */
+/*   Updated: 2024/07/23 12:26:57 by yiken            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,7 @@ t_smplcmd	*ft_lstnew(char *data, char **arr, t_smplcmd **pmp)
 {
 	t_smplcmd	*new;
 	int			i;
-
+	char		*tmp;
 	new = malloc(sizeof(t_smplcmd));
 	if (!new)
 	{
@@ -38,15 +38,15 @@ t_smplcmd	*ft_lstnew(char *data, char **arr, t_smplcmd **pmp)
 	data = add_space_in_red(data);
 	new->argv = process_token(data, ' ');
 	free(data);
-	check_heredoc_quotes(new->argv, new);
+	new->argv = rm_red_args(new->argv, ft_arglen(new->argv), new);
 	i = 0;
-	//
 	while (new->argv[i])
 	{
-		new->argv[i] = rm_escape_char(new->argv[i]);
+		tmp = new->argv[i];
+		new->argv[i] = rm_escape_char(tmp);
+		free(tmp);
 		i++;
 	}
-	new->argv = rm_red_args(new->argv, ft_arglen(new->argv), new);
 	return (new->next = NULL, new);
 }
 

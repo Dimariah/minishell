@@ -6,7 +6,7 @@
 /*   By: yiken <yiken@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/02 17:58:51 by yiken             #+#    #+#             */
-/*   Updated: 2024/07/19 16:59:47 by yiken            ###   ########.fr       */
+/*   Updated: 2024/07/22 16:48:08 by yiken            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,6 @@ int		to_remove(char c);
 char	*trim_key(char *str);
 int		is_expandable(char *str);
 char	*find_var(char **envp, char *key, int key_len);
-void	expand_error(void);
 void	code_len(int code, int *cntr);
 void	cat_code(int code, char *new_str, int *j);
 

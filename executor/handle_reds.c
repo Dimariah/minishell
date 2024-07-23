@@ -3,72 +3,99 @@
 /*                                                        :::      ::::::::   */
 /*   handle_reds.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: messkely <messkely@student.42.fr>          +#+  +:+       +#+        */
+/*   By: yiken <yiken@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/16 16:44:48 by yiken             #+#    #+#             */
-/*   Updated: 2024/07/22 00:08:37 by messkely         ###   ########.fr       */
+/*   Updated: 2024/07/23 13:48:56 by yiken            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-int	ft_strncmp(char *s1, char *s2, size_t n);
-int	ft_strlen(char *str);
+int		ft_strncmp(char *s1, char *s2, size_t n);
+int		ft_strlen(char *str);
+char	*expd_line(char **envp, char *str, int code);
+int		exit_status(int exit_status);
+void	restore_std(int *std);
+char	*rm_escape_char(char *s);
 
-void	here_doc(int *pipefd, int *std, char *lim, t_smplcmd *cmdlst)
+int	here_doc(int *std, char *lim, t_smplcmd *cmdlst, char **envp)
 {
 	char	*str;
-	char	*tmp;
+	int		pipefd[2];
+	int		out_save;
 
-	dup2(std[0], STDIN_FILENO);
+	if (pipe(pipefd) == -1)
+		return (perror("pipe"), 0);
+	out_save = dup(STDOUT_FILENO);
+	restore_std(std);
 	str = readline("> ");
-	if (str && str[0] == '$' && !cmdlst->exp_herd)
-		tmp = getenv(&str[1]);
-	else
-		tmp = getenv(str);
 	while (str && ft_strncmp(str, lim, ft_strlen(lim) + 1))
 	{
-		if (tmp)
-			write(pipefd[1], tmp, strlen(tmp));
-		else
-			write(pipefd[1], str, strlen(str));
-		write(pipefd[1], "\n", 1);
-		free(str);
+		if (cmdlst->exp_herd)
+		{
+			str = expd_line(envp, str, exit_status(-500));
+			if (!str)
+				return (0);
+		}
+		write(pipefd[1], str, ft_strlen(str));
+		(write(pipefd[1], "\n", 1), free(str));
 		str = readline("> ");
-		if (str && str[0] == '$' && !cmdlst->exp_herd)
-			tmp = getenv(&str[1]);
-		else
-			tmp = getenv(str);
-		printf("flag : %d\n", cmdlst->exp_herd);
 	}
-	free(str);
-	close(pipefd[1]);
-	dup2(pipefd[0], STDIN_FILENO);
-	close(pipefd[0]);
+	(free(str), free(lim), dup2(out_save, STDOUT_FILENO));
+	(close(out_save), dup2(pipefd[0], STDIN_FILENO));
+	return (close(pipefd[1]), close(pipefd[0]), 1);
 }
 
-int	inp_reds(char **reds, int *std, t_smplcmd *cmdlst)
+int	open_file(char *file, int mode)
 {
-	int	i;
-	int	fdin;
-	int	pipefd[2];
+	char	*unq_file;
+	int		fd;
+
+	if (!file)
+		return (-1);
+	unq_file = rm_escape_char(file);
+	if (mode == 1)
+		fd = open(unq_file, O_RDONLY);
+	if (mode == 2)
+		fd = open(unq_file, O_TRUNC | O_CREAT | O_WRONLY, 0644);
+	if (mode == 3)
+		fd = open(unq_file, O_APPEND | O_CREAT | O_WRONLY, 0644);
+	if (fd == -1)
+		perror(unq_file);
+	free(unq_file);
+	return (fd);
+}
+
+char	*unq_lim(char *lim, t_smplcmd *cmdlst)
+{
+	cmdlst->exp_herd = 1;
+	if (*lim == '\"' || *lim == '\'')
+		cmdlst->exp_herd = 0;
+	return (rm_escape_char(lim));
+}
+
+int	inp_reds(char **reds, int *std, char **envp, t_smplcmd *cmdlst)
+{
+	int		i;
+	int		fdin;
+	char	*lim;
 
 	i = 0;
 	while (reds[i])
 	{
 		if (!ft_strncmp(reds[i], "<", 2))
 		{
-			fdin = open(reds[++i], O_RDONLY);
+			fdin = open_file(reds[++i], 1);
 			if (fdin == -1)
-				return (perror(reds[i]), 0);
-			dup2(fdin, STDIN_FILENO);
-			close(fdin);
+				return (0);
+			(dup2(fdin, STDIN_FILENO), close(fdin));
 		}
 		else if (!ft_strncmp(reds[i], "<<", 2))
 		{
-			if (pipe(pipefd) == -1)
-				return (perror("pipe"), 0);
-			here_doc(pipefd, std, reds[++i], cmdlst);
+			lim = unq_lim(reds[++i], cmdlst);
+			if (!lim || !here_doc(std, lim, cmdlst, envp))
+				return (0);
 		}
 		i++;
 	}
@@ -85,38 +112,19 @@ int	out_reds(char **reds)
 	{
 		if (!ft_strncmp(reds[i], ">", 2))
 		{
-			fdout = open(reds[++i], O_TRUNC | O_CREAT | O_WRONLY, 0644);
+			fdout = open_file(reds[++i], 2);
 			if (fdout == -1)
-				return (perror(reds[i]), 0);
-			dup2(fdout, STDOUT_FILENO);
-			close(fdout);
+				return (0);
+			(dup2(fdout, STDOUT_FILENO), close(fdout));
 		}
 		else if (!ft_strncmp(reds[i], ">>", 3))
 		{
-			fdout = open(reds[++i], O_APPEND | O_CREAT | O_WRONLY, 0644);
+			fdout = open_file(reds[++i], 3);
 			if (fdout == -1)
-				return (perror(reds[i]), 0);
-			dup2(fdout, STDOUT_FILENO);
-			close(fdout);
+				return (0);
+			(dup2(fdout, STDOUT_FILENO), close(fdout));
 		}
 		i++;
 	}
 	return (1);
 }
-
-minishell> cat << '$'
-I find It
-> $USER
-> $
-flag : 1
-$USER
-minishell> cat << '"$"
-I find It
-> cat << '"^C
-minishell> cat << "$"
-I find It
-> $USER
-> $
-flag : 1
-$USER
-minishell> 

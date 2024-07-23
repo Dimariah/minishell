@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   lib_tools3.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: messkely <messkely@student.42.fr>          +#+  +:+       +#+        */
+/*   By: yiken <yiken@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/07 15:00:41 by messkely          #+#    #+#             */
-/*   Updated: 2024/07/22 00:02:20 by messkely         ###   ########.fr       */
+/*   Updated: 2024/07/23 13:44:48 by yiken            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,50 +51,4 @@ int	exit_status(int exit_status)
 	if (exit_status != -500)
 		value = exit_status;
 	return (value);
-}
-
-char	*check_dollar(char *str)
-{
-	int		i;
-	int		j;
-	char	*tmp;
-
-	i = 0;
-	if (str[i] != '$')
-		return (str);
-	tmp = malloc(ft_strlen(str) + 1);
-	if (!tmp)
-		return (NULL);
-	j = 0;
-	i++;
-	while (str[i])
-		tmp[j++] = str[i++];
-	tmp[i] = '\0';
-	// free(str);
-	return (tmp);
-}
-
-void	check_heredoc_quotes(char **args, t_smplcmd *cmd)
-{
-	int i;
-
-	cmd->exp_herd = 0;
-	if (args == NULL)
-		return ;
-	i = 0;
-	while (args[i] != NULL)
-	{
-		if (strcmp(args[i], "<<") == 0)
-		{
-			i++;
-			if (args[i][0] == '"' || args[i][0] == '\'')
-			{
-				cmd->exp_herd = 1;
-				printf("I find It\n");
-				return;
-			}
-		}
-		i++;
-	}
-	cmd->exp_herd = 0;
 }
