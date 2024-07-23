@@ -1,5 +1,5 @@
 NAME 	= minishell
-CC		= cc
+CC		= clang
 USER	= $(shell echo $$USER)
 FLAGS	= -Wall -Wextra -Werror
 LDFLAGS	= -L/goinfre/$(USER)/homebrew/opt/readline/lib -lreadline
@@ -14,10 +14,10 @@ RM		= rm -f
 all: $(NAME)
 
 $(NAME): $(OBJ)
-	$(CC) $(FLAGS) $(OBJ) -o $(NAME) $(INCLUDE) $(LDFLAGS) -fsanitize=address
+	$(CC) $(FLAGS) $(OBJ) -o $(NAME) $(INCLUDE) $(LDFLAGS)
 
 %.o: %.c minishell.h
-	$(CC) $(FLAGS) $(INCLUDE) -c $< -o $@
+	$(CC) --analyze $(FLAGS) $(INCLUDE) -c $< -o $@
 
 clean:
 	$(RM) $(OBJ)

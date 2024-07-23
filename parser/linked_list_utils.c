@@ -6,7 +6,7 @@
 /*   By: yiken <yiken@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/10 20:28:39 by messkely          #+#    #+#             */
-/*   Updated: 2024/07/23 12:26:57 by yiken            ###   ########.fr       */
+/*   Updated: 2024/07/23 16:37:22 by yiken            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,6 +27,7 @@ t_smplcmd	*ft_lstnew(char *data, char **arr, t_smplcmd **pmp)
 	t_smplcmd	*new;
 	int			i;
 	char		*tmp;
+
 	new = malloc(sizeof(t_smplcmd));
 	if (!new)
 	{
