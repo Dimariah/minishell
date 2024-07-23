@@ -14,7 +14,7 @@ RM		= rm -f
 all: $(NAME)
 
 $(NAME): $(OBJ)
-	$(CC) $(FLAGS) $(OBJ) -o $(NAME) $(INCLUDE) $(LDFLAGS)
+	$(CC) $(FLAGS) $(OBJ) -o $(NAME) $(INCLUDE) $(LDFLAGS) -fsanitize=address
 
 %.o: %.c minishell.h
 	$(CC) $(FLAGS) $(INCLUDE) -c $< -o $@

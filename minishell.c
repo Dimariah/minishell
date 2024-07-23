@@ -6,7 +6,7 @@
 /*   By: yiken <yiken@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/06 17:16:09 by yiken             #+#    #+#             */
-/*   Updated: 2024/07/20 17:08:47 by yiken            ###   ########.fr       */
+/*   Updated: 2024/07/22 15:15:47 by yiken            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,7 +73,7 @@ void	minishell_loop(t_smplcmd **cmdlst, char	***envp)
 			continue ;
 		free(line);
 		ft_parser(cmdlst, expdd_line);
-		exec_cmds(*cmdlst, envp);
+		exit_status(exec_cmds(*cmdlst, envp));
 		free_list(cmdlst);
 	}
 }

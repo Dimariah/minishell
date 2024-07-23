@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: messkely <messkely@student.42.fr>          +#+  +:+       +#+        */
+/*   By: yiken <yiken@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/16 16:47:34 by yiken             #+#    #+#             */
-/*   Updated: 2024/07/21 23:58:03 by messkely         ###   ########.fr       */
+/*   Updated: 2024/07/22 17:02:11 by yiken            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 extern int	g_beta_pid;
 char	*get_path(char *xcutable, char **envp, int *status, t_smplcmd *cmdlst);
-int		inp_reds(char **reds, int *std, t_smplcmd *cmdlst);
+int		inp_reds(char **reds, int *std, char **envp, t_smplcmd *cmdlst);
 int		out_reds(char **reds);
 int		ft_strncmp(char *s1, char *s2, size_t n);
 int		exec_pbuin(t_smplcmd *cmdlst, char ***envp, int *status);
@@ -68,8 +68,8 @@ int	exec_cmd(t_smplcmd *cmdlst, int *std, char **envp)
 
 	if (cmdlst->next && pipe(pipefd) == -1)
 		return (perror("pipe"), 1);
-	if (!inp_reds(cmdlst->reds, std, cmdlst) || (cmdlst->next && !pipe_dup(pipefd))
-		|| (cmdlst->list_len > 1 && !out_reds(cmdlst->reds)))
+	if ((cmdlst->next && !pipe_dup(pipefd)) || !out_reds(cmdlst->reds)
+		|| !inp_reds(cmdlst->reds, std, envp, cmdlst))
 	{
 		dup2(pipefd[0], STDIN_FILENO);
 		return (close(pipefd[1]), close(pipefd[0]), 1);
@@ -93,12 +93,11 @@ int	exec_cmds(t_smplcmd *cmdlst, char ***envp)
 	int	status;
 	int	std[2];
 
-	lst_len_init(cmdlst);
 	status = 0;
 	std[0] = dup(STDIN_FILENO);
 	std[1] = dup(STDOUT_FILENO);
-	if (!cmdlst->next && exec_pbuin(cmdlst, envp, &status))
-		return (restore_std(std), 1);
+	lst_len_init(cmdlst);
+	exec_pbuin(cmdlst, envp, &status);
 	g_beta_pid = fork();
 	if (g_beta_pid == -1)
 		return (perror("fork"), 1);
@@ -114,5 +113,5 @@ int	exec_cmds(t_smplcmd *cmdlst, char ***envp)
 		exit(status);
 	}
 	wait(&status);
-	return (g_beta_pid = -1, restore_std(std), exit_status(get_status(status)));
+	return (g_beta_pid = -1, restore_std(std), get_status(status));
 }

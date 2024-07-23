@@ -6,7 +6,7 @@
 /*   By: yiken <yiken@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/02 18:20:45 by yiken             #+#    #+#             */
-/*   Updated: 2024/07/19 17:01:33 by yiken            ###   ########.fr       */
+/*   Updated: 2024/07/23 13:30:28 by yiken            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,6 +65,7 @@ int	is_expandable(char *str)
 	{
 		inside_sq = 0;
 		inside_uq = 0;
+		after_hdoc = 0;
 	}
 	return (*str == '$' && !inside_sq && !inside_uq && !after_hdoc);
 }

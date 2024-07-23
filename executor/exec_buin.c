@@ -6,7 +6,7 @@
 /*   By: yiken <yiken@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/28 11:26:52 by yiken             #+#    #+#             */
-/*   Updated: 2024/07/19 20:31:54 by yiken            ###   ########.fr       */
+/*   Updated: 2024/07/22 14:16:14 by yiken            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,12 +45,10 @@ int	ch_export(t_smplcmd *cmdlst, int x_status)
 	return (status);
 }
 
-int	exec_pbuin(t_smplcmd *cmdlst, char ***envp, int *status)
+void	exec_pbuin(t_smplcmd *cmdlst, char ***envp, int *status)
 {
 	char	*xcutable;
 
-	if (!out_reds(cmdlst->reds))
-		return (1);
 	xcutable = cmdlst->argv[0];
 	if (!ft_strncmp(xcutable, "cd", 3))
 		*status = cd(cmdlst, envp);
@@ -60,7 +58,6 @@ int	exec_pbuin(t_smplcmd *cmdlst, char ***envp, int *status)
 		*status = ft_export(cmdlst, envp);
 	if (!ft_strncmp(xcutable, "exit", 5))
 		*status = ft_exit(cmdlst, cmdlst->argv, *envp);
-	return (0);
 }
 
 int	exec_chbuin(t_smplcmd *cmdlst, char **envp, int *status)

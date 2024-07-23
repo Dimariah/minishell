@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: messkely <messkely@student.42.fr>          +#+  +:+       +#+        */
+/*   By: yiken <yiken@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/29 19:51:11 by messkely          #+#    #+#             */
-/*   Updated: 2024/07/21 23:50:32 by messkely         ###   ########.fr       */
+/*   Updated: 2024/07/22 15:05:49 by yiken            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,6 +28,8 @@ typedef struct s_smplcmd
 	char				**reds;
 	int					list_len;
 	int					exp_herd;
+	int					flg_qout;
+	char				**envp;
 	struct s_smplcmd	*next;
 }	t_smplcmd;
 

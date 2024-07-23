@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   rm_parser.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: messkely <messkely@student.42.fr>          +#+  +:+       +#+        */
+/*   By: yiken <yiken@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/28 13:10:26 by messkely          #+#    #+#             */
-/*   Updated: 2024/07/21 23:06:04 by messkely         ###   ########.fr       */
+/*   Updated: 2024/07/23 13:45:18 by yiken            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,9 +30,9 @@ char	*rm_escape_char(char *s)
 
 	single_quote = 0;
 	double_quote = 0;
-	res = malloc((ft_strlen(s) + 1) * sizeof(char));
-	if (!res)
-		exit(1);
+	res = malloc(ft_strlen(s) + 1);
+	if (!s || !res)
+		return (free(res), NULL);
 	i = 0;
 	j = 0;
 	while (s[i])
@@ -45,7 +45,7 @@ char	*rm_escape_char(char *s)
 			res[j++] = s[i];
 		i++;
 	}
-	return (res[j] = '\0', free(s), res);
+	return (res[j] = '\0', res);
 }
 
 static int	count_valid_elements(char *args[], int n)
