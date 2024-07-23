@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   handle_reds.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yiken <yiken@student.42.fr>                +#+  +:+       +#+        */
+/*   By: messkely <messkely@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/16 16:44:48 by yiken             #+#    #+#             */
-/*   Updated: 2024/07/20 17:01:15 by yiken            ###   ########.fr       */
+/*   Updated: 2024/07/22 00:08:37 by messkely         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,18 +15,31 @@
 int	ft_strncmp(char *s1, char *s2, size_t n);
 int	ft_strlen(char *str);
 
-void	here_doc(int *pipefd, int *std, char *lim)
+void	here_doc(int *pipefd, int *std, char *lim, t_smplcmd *cmdlst)
 {
 	char	*str;
+	char	*tmp;
 
 	dup2(std[0], STDIN_FILENO);
 	str = readline("> ");
+	if (str && str[0] == '$' && !cmdlst->exp_herd)
+		tmp = getenv(&str[1]);
+	else
+		tmp = getenv(str);
 	while (str && ft_strncmp(str, lim, ft_strlen(lim) + 1))
 	{
-		write(pipefd[1], str, ft_strlen(str));
+		if (tmp)
+			write(pipefd[1], tmp, strlen(tmp));
+		else
+			write(pipefd[1], str, strlen(str));
 		write(pipefd[1], "\n", 1);
 		free(str);
 		str = readline("> ");
+		if (str && str[0] == '$' && !cmdlst->exp_herd)
+			tmp = getenv(&str[1]);
+		else
+			tmp = getenv(str);
+		printf("flag : %d\n", cmdlst->exp_herd);
 	}
 	free(str);
 	close(pipefd[1]);
@@ -34,7 +47,7 @@ void	here_doc(int *pipefd, int *std, char *lim)
 	close(pipefd[0]);
 }
 
-int	inp_reds(char **reds, int *std)
+int	inp_reds(char **reds, int *std, t_smplcmd *cmdlst)
 {
 	int	i;
 	int	fdin;
@@ -55,7 +68,7 @@ int	inp_reds(char **reds, int *std)
 		{
 			if (pipe(pipefd) == -1)
 				return (perror("pipe"), 0);
-			here_doc(pipefd, std, reds[++i]);
+			here_doc(pipefd, std, reds[++i], cmdlst);
 		}
 		i++;
 	}
@@ -90,3 +103,20 @@ int	out_reds(char **reds)
 	}
 	return (1);
 }
+
+minishell> cat << '$'
+I find It
+> $USER
+> $
+flag : 1
+$USER
+minishell> cat << '"$"
+I find It
+> cat << '"^C
+minishell> cat << "$"
+I find It
+> $USER
+> $
+flag : 1
+$USER
+minishell> 

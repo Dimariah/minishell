@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yiken <yiken@student.42.fr>                +#+  +:+       +#+        */
+/*   By: messkely <messkely@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/29 19:51:11 by messkely          #+#    #+#             */
-/*   Updated: 2024/07/19 18:58:24 by yiken            ###   ########.fr       */
+/*   Updated: 2024/07/21 23:50:32 by messkely         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,9 +27,12 @@ typedef struct s_smplcmd
 	char				**argv;
 	char				**reds;
 	int					list_len;
+	int					exp_herd;
 	struct s_smplcmd	*next;
 }	t_smplcmd;
 
+char		*check_dollar(char *str);
+void		check_heredoc_quotes(char **args, t_smplcmd *cmd);
 int			check_syntax(char *input);
 void		ft_handle_signals(void);
 void		ch_handle_signals(void);

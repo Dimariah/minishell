@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   linked_list_utils.c                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yiken <yiken@student.42.fr>                +#+  +:+       +#+        */
+/*   By: messkely <messkely@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/10 20:28:39 by messkely          #+#    #+#             */
-/*   Updated: 2024/07/08 13:39:46 by yiken            ###   ########.fr       */
+/*   Updated: 2024/07/21 23:51:58 by messkely         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,15 +38,16 @@ t_smplcmd	*ft_lstnew(char *data, char **arr, t_smplcmd **pmp)
 	data = add_space_in_red(data);
 	new->argv = process_token(data, ' ');
 	free(data);
+	check_heredoc_quotes(new->argv, new);
 	i = 0;
+	//
 	while (new->argv[i])
 	{
 		new->argv[i] = rm_escape_char(new->argv[i]);
 		i++;
 	}
 	new->argv = rm_red_args(new->argv, ft_arglen(new->argv), new);
-	new->next = NULL;
-	return (new);
+	return (new->next = NULL, new);
 }
 
 t_smplcmd	*ft_last_node(t_smplcmd *head)
