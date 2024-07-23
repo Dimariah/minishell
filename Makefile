@@ -1,5 +1,5 @@
 NAME 	= minishell
-CC		= clang
+CC		= cc
 USER	= $(shell echo $$USER)
 FLAGS	= -Wall -Wextra -Werror
 LDFLAGS	= -L/goinfre/$(USER)/homebrew/opt/readline/lib -lreadline
@@ -17,7 +17,7 @@ $(NAME): $(OBJ)
 	$(CC) $(FLAGS) $(OBJ) -o $(NAME) $(INCLUDE) $(LDFLAGS)
 
 %.o: %.c minishell.h
-	$(CC) --analyze $(FLAGS) $(INCLUDE) -c $< -o $@
+	$(CC) $(FLAGS) $(INCLUDE) -c $< -o $@
 
 clean:
 	$(RM) $(OBJ)
