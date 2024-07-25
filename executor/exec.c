@@ -6,7 +6,7 @@
 /*   By: yiken <yiken@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/16 16:47:34 by yiken             #+#    #+#             */
-/*   Updated: 2024/07/25 15:16:01 by yiken            ###   ########.fr       */
+/*   Updated: 2024/07/25 17:04:20 by yiken            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -97,7 +97,7 @@ int	exec_cmds(t_smplcmd *cmdlst, char ***envp)
 	std[1] = dup(STDOUT_FILENO);
 	lst_len_init(cmdlst);
 	if (!cmdlst->next)
-		status = exec_pbuin(cmdlst, envp);
+		exit_status(exec_pbuin(cmdlst, envp));
 	pid_holder(fork());
 	if (pid_holder(-500) == -1)
 		return (perror("fork"), 1);

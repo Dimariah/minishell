@@ -6,7 +6,7 @@
 /*   By: yiken <yiken@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/26 15:08:37 by yiken             #+#    #+#             */
-/*   Updated: 2024/07/24 17:56:56 by yiken            ###   ########.fr       */
+/*   Updated: 2024/07/25 17:09:57 by yiken            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -90,12 +90,12 @@ int	oldpwd_up(char *cwd, char ***envp)
 	return (free(*envp), nenvp[i] = NULL, *envp = nenvp, 1);
 }
 
-int	ch_cd(t_smplcmd *cmdlst, char **envp, int x_status)
+int	ch_cd(t_smplcmd *cmdlst, char **envp)
 {
 	char	*npath;
 
 	if (cmdlst->list_len == 1)
-		return (x_status);
+		return (exit_status(-500));
 	npath = get_npath(cmdlst->argv, envp);
 	if (!npath)
 		return (1);

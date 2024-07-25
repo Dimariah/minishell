@@ -6,7 +6,7 @@
 /*   By: yiken <yiken@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/30 11:23:48 by yiken             #+#    #+#             */
-/*   Updated: 2024/07/19 20:27:15 by yiken            ###   ########.fr       */
+/*   Updated: 2024/07/25 17:10:13 by yiken            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,13 +38,13 @@ int	unset_kerror(char *key, int err_print)
 	return (0);
 }
 
-int	ch_unset(t_smplcmd *cmdlst, int x_status)
+int	ch_unset(t_smplcmd *cmdlst)
 {
 	int	i;
 	int	status;
 
 	if (cmdlst->list_len == 1)
-		return (x_status);
+		return (exit_status(-500));
 	i = 1;
 	status = 0;
 	while (cmdlst->argv[i])
