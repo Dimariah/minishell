@@ -6,7 +6,7 @@
 /*   By: yiken <yiken@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/07 15:00:41 by messkely          #+#    #+#             */
-/*   Updated: 2024/07/23 16:21:39 by yiken            ###   ########.fr       */
+/*   Updated: 2024/07/25 15:13:27 by yiken            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,4 +58,13 @@ void	flags_todef(int *inside_sq, int *inside_uq, int *after_hdoc)
 	*inside_sq = 0;
 	*inside_uq = 0;
 	*after_hdoc = 0;
+}
+
+int	pid_holder(int pid)
+{
+	static int	beta_pid = -1;
+
+	if (pid != -500)
+		beta_pid = pid;
+	return (beta_pid);
 }

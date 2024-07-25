@@ -6,13 +6,12 @@
 /*   By: yiken <yiken@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/16 16:47:34 by yiken             #+#    #+#             */
-/*   Updated: 2024/07/25 14:29:32 by yiken            ###   ########.fr       */
+/*   Updated: 2024/07/25 15:16:01 by yiken            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-extern int	g_beta_pid;
 char	*get_path(char *xcutable, char **envp, int *status, t_smplcmd *cmdlst);
 int		inp_reds(char **reds, int *std, char **envp, t_smplcmd *cmdlst);
 int		out_reds(char **reds);
@@ -20,6 +19,7 @@ int		ft_strncmp(char *s1, char *s2, size_t n);
 int		exec_pbuin(t_smplcmd *cmdlst, char ***envp);
 void	restore_std(int *std);
 void	lst_len_init(t_smplcmd *cmdlst);
+int		pid_holder(int pid);
 
 int	pipe_dup(int *pipefd)
 {
@@ -98,10 +98,10 @@ int	exec_cmds(t_smplcmd *cmdlst, char ***envp)
 	lst_len_init(cmdlst);
 	if (!cmdlst->next)
 		status = exec_pbuin(cmdlst, envp);
-	g_beta_pid = fork();
-	if (g_beta_pid == -1)
+	pid_holder(fork());
+	if (pid_holder(-500) == -1)
 		return (perror("fork"), 1);
-	if (g_beta_pid == 0)
+	if (pid_holder(-500) == 0)
 	{
 		ch_handle_signals();
 		while (cmdlst)
@@ -113,5 +113,5 @@ int	exec_cmds(t_smplcmd *cmdlst, char ***envp)
 		exit(status);
 	}
 	wait(&status);
-	return (g_beta_pid = -1, restore_std(std), get_status(status));
+	return (pid_holder(-1), restore_std(std), get_status(status));
 }
