@@ -6,7 +6,7 @@
 /*   By: yiken <yiken@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/29 19:51:11 by messkely          #+#    #+#             */
-/*   Updated: 2024/07/22 15:05:49 by yiken            ###   ########.fr       */
+/*   Updated: 2024/07/25 12:12:40 by yiken            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,18 +28,13 @@ typedef struct s_smplcmd
 	char				**reds;
 	int					list_len;
 	int					exp_herd;
-	int					flg_qout;
-	char				**envp;
 	struct s_smplcmd	*next;
 }	t_smplcmd;
 
-char		*check_dollar(char *str);
-void		check_heredoc_quotes(char **args, t_smplcmd *cmd);
 int			check_syntax(char *input);
 void		ft_handle_signals(void);
 void		ch_handle_signals(void);
 int			exit_status(int exit_status);
-void		c_handle_signals(void);
 void		ft_error(char *s, char c);
 
 char		*rm_escape_char(char *s);
@@ -61,6 +56,5 @@ int			ft_strlen(char *str);
 char		*ft_strndup(char *s, size_t n);
 int			ft_strcmp(char *s1, char *s2);
 char		*ft_strdup(char *str);
-int			ft_arglen(char **args);
 
 #endif

@@ -6,7 +6,7 @@
 /*   By: yiken <yiken@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/03 10:54:43 by messkely          #+#    #+#             */
-/*   Updated: 2024/07/22 15:14:57 by yiken            ###   ########.fr       */
+/*   Updated: 2024/07/24 16:23:36 by yiken            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,7 +69,7 @@ char	**process_token_cp(char *s, char token, char **av, int tok_count)
 	while (s[i])
 	{
 		toggle_quotes(s[i], &single_quote, &double_quote);
-		if ((s[i] == token) && !single_quote && !double_quote)
+		if (s[i] == token && !single_quote && !double_quote)
 		{
 			if (i > start)
 				av[tok_count++] = ft_strndup(s + start, i - start);

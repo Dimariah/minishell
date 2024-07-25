@@ -6,7 +6,7 @@
 /*   By: yiken <yiken@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/26 15:08:37 by yiken             #+#    #+#             */
-/*   Updated: 2024/07/19 19:33:44 by yiken            ###   ########.fr       */
+/*   Updated: 2024/07/24 17:56:56 by yiken            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,7 +54,7 @@ char	*get_npath(char **args, char **envp)
 		if (!npath)
 			return (write(2, "cd: HOME not set\n", 17), NULL);
 	}
-	else if (args[1][0] == '-' && !args[1][1])
+	else if (*npath == '-' && !npath[1])
 	{
 		npath = npath_expd('-', envp);
 		if (!npath)

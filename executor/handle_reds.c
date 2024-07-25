@@ -6,7 +6,7 @@
 /*   By: yiken <yiken@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/16 16:44:48 by yiken             #+#    #+#             */
-/*   Updated: 2024/07/23 17:38:41 by yiken            ###   ########.fr       */
+/*   Updated: 2024/07/24 13:32:21 by yiken            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,6 @@ int		ft_strlen(char *str);
 char	*expd_line(char **envp, char *str, int code);
 int		exit_status(int exit_status);
 void	restore_std(int *std);
-char	*rm_escape_char(char *s);
 
 int	here_doc(int *std, char *lim, t_smplcmd *cmdlst, char **envp)
 {

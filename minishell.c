@@ -6,7 +6,7 @@
 /*   By: yiken <yiken@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/06 17:16:09 by yiken             #+#    #+#             */
-/*   Updated: 2024/07/22 15:15:47 by yiken            ###   ########.fr       */
+/*   Updated: 2024/07/24 14:20:25 by yiken            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,6 +60,7 @@ void	minishell_loop(t_smplcmd **cmdlst, char	***envp)
 	while (1)
 	{
 		line = readline("minishell> ");
+		status = exit_status(-500);
 		if (!line)
 			break ;
 		if (*line)
@@ -67,7 +68,6 @@ void	minishell_loop(t_smplcmd **cmdlst, char	***envp)
 		line = ft_strtrim(line, " ");
 		if (!(*line) || check_syntax(line))
 			continue ;
-		status = exit_status(-500);
 		expdd_line = expd_line(*envp, line, status);
 		if (!expdd_line || !(*expdd_line))
 			continue ;
