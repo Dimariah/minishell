@@ -6,7 +6,7 @@
 /*   By: yiken <yiken@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/28 12:16:49 by yiken             #+#    #+#             */
-/*   Updated: 2024/07/10 16:10:51 by yiken            ###   ########.fr       */
+/*   Updated: 2024/07/25 16:11:44 by yiken            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,7 +71,10 @@ int	unset(t_smplcmd *cmdlst, char **envp)
 	while (cmdlst->argv[i])
 	{
 		if (unset_kerror(cmdlst->argv[i], 1))
+		{
+			printf("enterd\n");
 			status = 1;
+		}
 		i++;
 	}
 	fill_nenvp(envp, envp, cmdlst->argv + 1);

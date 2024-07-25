@@ -6,7 +6,7 @@
 /*   By: yiken <yiken@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/07 14:10:38 by yiken             #+#    #+#             */
-/*   Updated: 2024/07/19 20:26:49 by yiken            ###   ########.fr       */
+/*   Updated: 2024/07/25 17:10:06 by yiken            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -85,10 +85,14 @@ int	check_digit(char *s)
 	return (1);
 }
 
-int	ch_exit(char **args)
+int	ch_exit(t_smplcmd *cmdlst)
 {
-	int	i;
+	int		i;
+	char	**args;
 
+	if (cmdlst->list_len == 1)
+		return (exit_status(-500));
+	args = cmdlst->argv;
 	i = envp_len(args);
 	if (args[1] && !check_digit(args[1]))
 	{
@@ -124,7 +128,7 @@ int	ft_exit(t_smplcmd *cmdlst, char **args, char **envp)
 	else if (i == 1)
 	{
 		cleanup(cmdlst, envp);
-		exit(0);
+		exit(exit_status(-500));
 	}
 	else if (i == 2 && check_digit(args[1]))
 	{
