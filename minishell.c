@@ -6,13 +6,12 @@
 /*   By: yiken <yiken@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/06 17:16:09 by yiken             #+#    #+#             */
-/*   Updated: 2024/07/24 14:20:25 by yiken            ###   ########.fr       */
+/*   Updated: 2024/07/25 15:13:15 by yiken            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-int		g_beta_pid = -1;
 char	*expd_line(char **envp, char *str, int status);
 char	*ft_strdup(char *str);
 void	ft_parser(t_smplcmd **pmp, char *input);
