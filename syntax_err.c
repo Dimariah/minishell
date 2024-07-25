@@ -6,7 +6,7 @@
 /*   By: yiken <yiken@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/31 10:15:54 by messkely          #+#    #+#             */
-/*   Updated: 2024/07/24 14:58:30 by yiken            ###   ########.fr       */
+/*   Updated: 2024/07/25 17:36:11 by yiken            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -101,6 +101,6 @@ int	check_syntax(char *input)
 	if (*input == 0)
 		return (0);
 	if (check_multi_pipe(input) || check_syntax_red(input))
-		return (free(input), 1);
+		return (free(input), exit_status(258), 1);
 	return (0);
 }
