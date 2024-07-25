@@ -6,7 +6,7 @@
 /*   By: yiken <yiken@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/16 16:47:34 by yiken             #+#    #+#             */
-/*   Updated: 2024/07/22 17:02:11 by yiken            ###   ########.fr       */
+/*   Updated: 2024/07/25 14:29:32 by yiken            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@ char	*get_path(char *xcutable, char **envp, int *status, t_smplcmd *cmdlst);
 int		inp_reds(char **reds, int *std, char **envp, t_smplcmd *cmdlst);
 int		out_reds(char **reds);
 int		ft_strncmp(char *s1, char *s2, size_t n);
-int		exec_pbuin(t_smplcmd *cmdlst, char ***envp, int *status);
+int		exec_pbuin(t_smplcmd *cmdlst, char ***envp);
 void	restore_std(int *std);
 void	lst_len_init(t_smplcmd *cmdlst);
 
@@ -66,6 +66,7 @@ int	exec_cmd(t_smplcmd *cmdlst, int *std, char **envp)
 	pid_t	pid;
 	int		status;
 
+	dup2(std[1], STDOUT_FILENO);
 	if (cmdlst->next && pipe(pipefd) == -1)
 		return (perror("pipe"), 1);
 	if ((cmdlst->next && !pipe_dup(pipefd)) || !out_reds(cmdlst->reds)
@@ -83,7 +84,6 @@ int	exec_cmd(t_smplcmd *cmdlst, int *std, char **envp)
 	else if (pid == 0)
 		child_process(cmdlst, pipefd, envp);
 	wait(&status);
-	dup2(std[1], STDOUT_FILENO);
 	dup2(pipefd[0], STDIN_FILENO);
 	return (close(pipefd[0]), WEXITSTATUS(status));
 }
@@ -93,11 +93,11 @@ int	exec_cmds(t_smplcmd *cmdlst, char ***envp)
 	int	status;
 	int	std[2];
 
-	status = 0;
 	std[0] = dup(STDIN_FILENO);
 	std[1] = dup(STDOUT_FILENO);
 	lst_len_init(cmdlst);
-	exec_pbuin(cmdlst, envp, &status);
+	if (!cmdlst->next)
+		status = exec_pbuin(cmdlst, envp);
 	g_beta_pid = fork();
 	if (g_beta_pid == -1)
 		return (perror("fork"), 1);

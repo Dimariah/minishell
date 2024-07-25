@@ -6,7 +6,7 @@
 /*   By: yiken <yiken@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/02 18:20:45 by yiken             #+#    #+#             */
-/*   Updated: 2024/07/23 16:21:02 by yiken            ###   ########.fr       */
+/*   Updated: 2024/07/24 15:18:54 by yiken            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,7 @@ int	has_closure(char *str, char c)
 	return (0);
 }
 
-void	check_hdoc(char *str, int *after_hdoc, int out_qts, int out_dq)
+void	set_after_hdoc(char *str, int *after_hdoc, int out_qts, int out_dq)
 {
 	if (out_qts && *str == '<' && str[1] == '<')
 		*after_hdoc = 1;
@@ -48,7 +48,7 @@ int	is_expandable(char *str)
 	static int	inside_uq;
 	static int	after_hdoc;
 
-	check_hdoc(str, &after_hdoc,
+	set_after_hdoc(str, &after_hdoc,
 		(!inside_dq && !inside_sq && !inside_uq), !inside_dq);
 	if (*str == '\'' && !inside_dq)
 		inside_sq = !inside_sq;
